@@ -1,6 +1,0 @@
-customtkinter
-opencv-python
-pillow
-fpdf
-numpy
-pygrabber
