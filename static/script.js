@@ -5,6 +5,7 @@ const captureBtn = document.getElementById('capture-btn');
 const gallery = document.getElementById('gallery');
 const emptyState = document.getElementById('empty-state');
 const pageCountSpan = document.getElementById('page-count');
+const captureMobileBtn = document.getElementById('capture-mobile-btn');
 const compileBtn = document.getElementById('compile-btn');
 const flashOverlay = document.getElementById('flash-overlay');
 const filterBtns = document.querySelectorAll('.toggle-btn');
@@ -19,7 +20,7 @@ async function getCameras() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        
+
         cameraSelect.innerHTML = '';
         videoDevices.forEach((device, index) => {
             const option = document.createElement('option');
@@ -46,7 +47,7 @@ async function startCamera(deviceId) {
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: { 
+            video: {
                 deviceId: deviceId ? { exact: deviceId } : undefined,
                 width: { ideal: 1920 },
                 height: { ideal: 1080 }
@@ -61,6 +62,32 @@ async function startCamera(deviceId) {
 
 cameraSelect.addEventListener('change', (e) => {
     startCamera(e.target.value);
+});
+
+// --- Flip Camera ---
+const flipBtn = document.getElementById('flip-btn');
+let currentDeviceIndex = 0;
+let videoInputDevices = [];
+
+async function updateDeviceList() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+}
+
+flipBtn.addEventListener('click', async () => {
+    await updateDeviceList();
+    if (videoInputDevices.length < 2) {
+        showToast("Only one camera found", "info");
+        return;
+    }
+
+    // Find next camera
+    currentDeviceIndex = (currentDeviceIndex + 1) % videoInputDevices.length;
+    const nextDeviceId = videoInputDevices[currentDeviceIndex].deviceId;
+
+    // Update select dropdown
+    cameraSelect.value = nextDeviceId;
+    startCamera(nextDeviceId);
 });
 
 // --- Filter Selection ---
@@ -127,6 +154,10 @@ captureBtn.addEventListener('click', async () => {
     }
 });
 
+captureMobileBtn.addEventListener('click', () => {
+    captureBtn.click();
+});
+
 function addScanToGallery(scanData) {
     scannedImages.push(scanData.filename);
     updateStats();
@@ -140,20 +171,20 @@ function addScanToGallery(scanData) {
             <ion-icon name="trash"></ion-icon>
         </button>
     `;
-    
+
     // Insert before empty state (or hide empty state)
     if (scannedImages.length === 1) {
         emptyState.style.display = 'none';
     }
-    
+
     gallery.insertBefore(div, gallery.firstChild);
 }
 
-window.removeScan = function(filename, btnElement) {
+window.removeScan = function (filename, btnElement) {
     scannedImages = scannedImages.filter(f => f !== filename);
     btnElement.parentElement.remove();
     updateStats();
-    
+
     if (scannedImages.length === 0) {
         emptyState.style.display = 'flex';
     }
@@ -176,9 +207,9 @@ compileBtn.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ filenames: scannedImages })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             window.location.href = result.download_url;
             showToast("PDF Downloaded!", "success");
@@ -208,9 +239,9 @@ function showToast(message, type = 'info') {
     toast.style.fontFamily = 'Inter, sans-serif';
     toast.style.animation = 'slideIn 0.3s ease-out';
     toast.innerText = message;
-    
+
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(10px)';

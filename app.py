@@ -7,7 +7,10 @@ from flask import Flask, render_template, request, jsonify, send_file
 from scanner import DocumentScanner
 from fpdf import FPDF
 
-app = Flask(__name__)
+# explicitly set folder paths
+template_dir = os.path.abspath('templates')
+static_dir = os.path.abspath('static')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 scanner = DocumentScanner()
 
 # Ensure directories exist

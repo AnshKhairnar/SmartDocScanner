@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
 
     <div class="app-container">
@@ -50,7 +52,7 @@
             <div class="stats">
                 <p><span id="page-count">0</span> Pages Scanned</p>
             </div>
-            
+
             <button id="compile-btn" class="btn btn-success" disabled>
                 <ion-icon name="document-text"></ion-icon>
                 Download PDF
@@ -71,6 +73,10 @@
                     <div class="scan-line"></div>
                 </div>
                 <div id="flash-overlay"></div>
+                <button id="capture-mobile-btn" style="display: none;"></button>
+                <button id="flip-btn" class="icon-btn floating-btn">
+                    <ion-icon name="camera-reverse"></ion-icon>
+                </button>
             </div>
 
             <!-- Gallery Strip -->
@@ -86,4 +92,5 @@
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>
