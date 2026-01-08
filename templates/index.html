@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart PDF Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Ionicons for Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <header class="sidebar">
+            <div class="logo">
+                <ion-icon name="scan-outline"></ion-icon>
+                <span>FullScan</span>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Scan Mode</label>
+                    <div class="toggle-group" id="filter-group">
+                        <button class="toggle-btn active" data-filter="bw">B&W</button>
+                        <button class="toggle-btn" data-filter="gray">Gray</button>
+                        <button class="toggle-btn" data-filter="original">Color</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Camera Source</label>
+                    <select id="camera-select">
+                        <option value="">Loading cameras...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="capture-btn" class="btn btn-primary">
+                    <ion-icon name="camera"></ion-icon>
+                    Capture Scan
+                </button>
+            </div>
+
+            <div class="stats">
+                <p><span id="page-count">0</span> Pages Scanned</p>
+            </div>
+            
+            <button id="compile-btn" class="btn btn-success" disabled>
+                <ion-icon name="document-text"></ion-icon>
+                Download PDF
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Camera Viewfinder -->
+            <div class="viewfinder-container">
+                <video id="webcam-feed" autoplay playsinline muted></video>
+                <canvas id="capture-canvas" style="display: none;"></canvas>
+                <div class="overlay-guide">
+                    <div class="corner tl"></div>
+                    <div class="corner tr"></div>
+                    <div class="corner bl"></div>
+                    <div class="corner br"></div>
+                    <div class="scan-line"></div>
+                </div>
+                <div id="flash-overlay"></div>
+            </div>
+
+            <!-- Gallery Strip -->
+            <div class="gallery-strip" id="gallery">
+                <!-- Items will be injected here -->
+                <div class="empty-state" id="empty-state">
+                    <ion-icon name="images-outline"></ion-icon>
+                    <p>Scanned pages will appear here</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
